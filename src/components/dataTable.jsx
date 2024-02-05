@@ -31,18 +31,25 @@ const DataTable = ({tData}) => {
             const tempData = tData.toSorted((a, b) => a.ticker < b.ticker ? -1 : 1);
             setTableData(tempData);
         } else if(value === 'assetClass') {
-            
+            const result = Object.groupBy(tData, ({ assetClass }) => assetClass);
+            const tempTableData = result.Equities.concat(result.Macro, result.Credit);
+            setTableData(tempTableData);
         }
+    }
+
+    const clearSort = () => {
+        setSortBy('');
+        setTableData(tData);
     }
 
     return(
         <>
             <div className="py-4">
-                <label>SortBy: </label>
+                <label className="font-medium">SortBy: </label>
                 <select
                     value={sortBy}
                     onChange={handleChange}
-                    className="capitalize"
+                    className="capitalize bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-1/5 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mr-4"
                 >
                     <option value="" disabled>Select one</option>
                     {
@@ -51,6 +58,16 @@ const DataTable = ({tData}) => {
                         })
                     }
                 </select>
+                {
+                    sortBy !== '' ?
+                        <button
+                            onClick={clearSort}
+                            className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800"
+                        >
+                            Clear Sorting
+                        </button>
+                    : null
+                }
             </div>
             {
                 tableData.length ?
