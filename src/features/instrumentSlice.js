@@ -104,120 +104,23 @@ export const fetchInstrumentData = createAsyncThunk('fetchInstrument' , () => {
 export const instrumentSlice = createSlice({
     name: 'instrumentData',
     initialState,
-    reducers: (create) =>  ({
-        getInstrument: create.asyncThunk(
-            async (id, thunkApi) => {
-                const data = [
-                    {
-                        "ticker": "ALPHA",
-                        "price": 3150.67,
-                        "assetClass": "Credit"
-                    },
-                    {
-                        "ticker": "BETA",
-                        "price": 3791.37,
-                        "assetClass": "Equities"
-                    },
-                    {
-                        "ticker": "GAMMA",
-                        "price": 2299.1,
-                        "assetClass": "Equities"
-                    },
-                    {
-                        "ticker": "DELTA",
-                        "price": 3132.66,
-                        "assetClass": "Equities"
-                    },
-                    {
-                        "ticker": "EPSILON",
-                        "price": 1168.46,
-                        "assetClass": "Credit"
-                    },
-                    {
-                        "ticker": "ZETA",
-                        "price": 2716.78,
-                        "assetClass": "Credit"
-                    },
-                    {
-                        "ticker": "ETA",
-                        "price": 3089.2,
-                        "assetClass": "Macro"
-                    },
-                    {
-                        "ticker": "THETA",
-                        "price": 1075.44,
-                        "assetClass": "Macro"
-                    },
-                    {
-                        "ticker": "IOTA",
-                        "price": 1096.64,
-                        "assetClass": "Macro"
-                    },
-                    {
-                        "ticker": "KAPPA",
-                        "price": 2321.17,
-                        "assetClass": "Credit"
-                    },
-                    {
-                        "ticker": "LAMBDA",
-                        "price": 1472.2,
-                        "assetClass": "Credit"
-                    },
-                    {
-                        "ticker": "MU",
-                        "price": 2136.64,
-                        "assetClass": "Macro"
-                    },
-                    {
-                        "ticker": "NU",
-                        "price": 2744.89,
-                        "assetClass": "Macro"
-                    },
-                    {
-                        "ticker": "OMIKRON",
-                        "price": 2735.1,
-                        "assetClass": "Equities"
-                    },
-                    {
-                        "ticker": "SIGMA",
-                        "price": 1854.19,
-                        "assetClass": "Equities"
-                    },
-                    {
-                        "ticker": "TAU",
-                        "price": 2082.71,
-                        "assetClass": "Macro"
-                    },
-                    {
-                        "ticker": "OMEGA",
-                        "price": 2306.35,
-                        "assetClass": "Equities"
-                    },
-                    {
-                        "ticker": "PSI",
-                        "price": 2997.78,
-                        "assetClass": "Credit"
-                    }
-                ];
-                return data;
-            },
-            {
-                pending: (state) => {
-                  state.loading = true
-                },
-                rejected: (state, action) => {
-                  state.loading = false
-                  state.error = action.error.message
-                },
-                fulfilled: (state, action) => {
-                  state.loading = false
-                  state.instrument.push(action.payload)
-                },
-              }
-        )
-    }),
+    extraReducers: (builder) =>  {
+        builder.addCase(fetchInstrumentData.pending, (state) => {
+            state.loading = true
+        })
+        builder.addCase(fetchInstrumentData.fulfilled, (state, action) => {
+            state.loading = false
+            state.instrument = action.payload
+            state.error = ''
+        })
+        builder.addCase(fetchInstrumentData.rejected, (state,action) => {
+            state.loading = false
+            state.instrument = []
+            state.error = action.error.message
+        })
+    },
 })
 
-export const { getInstrument } = instrumentSlice.actions;
+// export const { getInstrument } = instrumentSlice.actions;
 
 export default instrumentSlice.reducer;
